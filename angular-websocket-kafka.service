@@ -1,0 +1,19 @@
+[Unit]
+Description=Angular.js, Socket.io, and Kafka sample app
+After=docker.service etcd.service
+Requires=docker.service etcd.service
+
+[Service]
+TimeoutStartSec=0
+
+# Container details
+# CNAME=angular-websocket-kafka
+# REPO=github.com/mfaulk/angular-websocket-kafka.git
+
+# Build image if theres none.
+ExecStartPre=/bin/sh -c "/usr/bin/docker images | grep angular-websocket-kafka || /usr/bin/docker build -t angular-websocket-kafka github.com/mfaulk/angular-websocket-kafka.git"
+
+# Run or start the container.
+ExecStart=/bin/sh -c "/usr/bin/docker ps -a | grep angular-websocket-kafka && /usr/bin/docker start -a angular-websocket-kafka || /usr/bin/docker run --name angular-websocket-kafka -p 0.0.0.0:3000:3000 angular-websocket-kafka"
+
+ExecStop=/usr/bin/docker stop angular-websocket-kafka
